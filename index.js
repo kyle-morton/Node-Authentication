@@ -4,7 +4,8 @@ let express = require('express'),
     mongoose = require('mongoose'),
     jwt = require('jsonwebtoken'),
     config = require('./config'),
-    User = require('./app/models/user');
+    User = require('./app/models/user'),
+    userRouter = require('./app/routers/user');
 
 //config
 let port = process.env.PORT || 8080; 
@@ -18,12 +19,10 @@ app.use(express.json());
 //use morgan for logging
 app.use(morgan('dev'));
 
-// basic route
+// basic route & setup
 app.get('/', function(req, res) {
     res.send('Hello! The API is at http://localhost:' + port + '/api');
-});
-
-//app routes
+}); 
 app.get('/setup', (req, res) => {
     
     let user = new User({
@@ -40,6 +39,9 @@ app.get('/setup', (req, res) => {
         res.json({success: true});
     });
 });
+
+//app routes
+app.use('/users', userRouter);
 
 
 //start server
